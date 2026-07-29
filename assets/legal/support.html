@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support - Neon Drift Board</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; background: #ffffff; color: #000000; }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    line-height: 1.6;
+    font-size: 16px;
+    padding: 22px 18px 48px;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  h1 { font-size: 26px; font-weight: 800; margin: 6px 0 8px; }
+  p, label { color: #000; }
+  .card { background: #f5f5f7; border-radius: 14px; padding: 16px; margin-top: 14px; }
+  label { display: block; font-weight: 700; margin: 12px 0 6px; }
+  input, textarea {
+    width: 100%;
+    border: 1px solid #d0d0d5;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 16px;
+    font-family: inherit;
+    color: #000;
+    background: #fff;
+  }
+  textarea { min-height: 130px; resize: vertical; }
+  button {
+    margin-top: 16px;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    background: #0b57d0;
+  }
+  .contact { margin-top: 18px; font-size: 15px; }
+  a { color: #0b57d0; }
+  .ok { display:none; background:#e6f4ea; color:#137333; border-radius:10px; padding:12px 14px; margin-top:14px; font-weight:600; }
+</style>
+</head>
+<body>
+  <h1>Support</h1>
+  <p>Have a question or a request? Fill out the form below and we will get back to you.</p>
+
+  <div class="card">
+    <label for="email">Your email</label>
+    <input id="email" type="email" placeholder="you@example.com">
+    <label for="msg">Your question</label>
+    <textarea id="msg" placeholder="Describe your question or issue..."></textarea>
+    <button onclick="submitForm()">Send</button>
+    <div id="ok" class="ok">Your request has been prepared. Thank you!</div>
+  </div>
+
+  <div class="contact">
+    You can also reach us directly at
+    <a href="mailto:support@neondriftboard.com">support@neondriftboard.com</a>.
+  </div>
+
+  <script>
+    function submitForm() {
+      var email = document.getElementById('email').value || '';
+      var msg = document.getElementById('msg').value || '';
+      var subject = encodeURIComponent('Neon Drift Board Support');
+      var body = encodeURIComponent('From: ' + email + '\n\n' + msg);
+      document.getElementById('ok').style.display = 'block';
+      window.location.href = 'mailto:support@neondriftboard.com?subject=' + subject + '&body=' + body;
+    }
+  </script>
+</body>
+</html>

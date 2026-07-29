@@ -1,0 +1,6 @@
+name: imgconv
+description: Temporary webp->png converter for asset inspection
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+dependencies:
+  image: ^4.2.0
