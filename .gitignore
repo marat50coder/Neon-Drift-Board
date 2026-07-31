@@ -44,9 +44,9 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Gridlink (gray flow) — secrets must NEVER be committed
-ios/Runner/GoogleService-Info.plist
-android/app/google-services.json
-# Plaintext credential source for the cipher generator — regenerate arrays
-# locally with `dart run tool/encode_drift_values.dart`, never commit.
+# Gridlink (gray flow) — plaintext credential SOURCES must NEVER be committed.
+# NOTE: GoogleService-Info.plist and google-services.json themselves are NOT
+# secret — they ship inside the .ipa/.apk anyway, and Firebase security is
+# enforced via App Check + Firebase Rules, not by hiding these files. They
+# are committed so CI (Codemagic/Xcode Cloud/GitHub Actions) can archive.
 tool/encode_drift_values.dart
