@@ -43,3 +43,10 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Gridlink (gray flow) — secrets must NEVER be committed
+ios/Runner/GoogleService-Info.plist
+android/app/google-services.json
+# Plaintext credential source for the cipher generator — regenerate arrays
+# locally with `dart run tool/encode_drift_values.dart`, never commit.
+tool/encode_drift_values.dart
