@@ -69,7 +69,8 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter_launcher_icons:
   android: true
-  ios: false
+  ios: true
+  remove_alpha_ios: true
   image_path: "assets/app_icon/icon.png"
   adaptive_icon_background: "#080716"
   adaptive_icon_foreground: "assets/app_icon/foreground.png"
