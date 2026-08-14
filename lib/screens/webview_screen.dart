@@ -1,4 +1,3 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -6,9 +5,13 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../theme/app_theme.dart';
 import '../widgets/ui_kit.dart';
 
-/// Displays a legal / support page. Loads the live URL when online and falls
-/// back to a bundled, black-on-white local copy when offline, so the content
-/// is ALWAYS available (fully offline capable).
+/// Displays a legal / support page. The white game is 100 % offline: this
+/// screen ALWAYS renders the bundled HTML asset and never attempts a network
+/// request. The [url] parameter is retained for compatibility (and shown in a
+/// mailto link inside the asset itself) but is intentionally NOT fetched, so
+/// the app never asks the OS for connectivity and never surfaces a "No
+/// Internet Connection" error dialog on airplane / metered / restricted
+/// networks.
 class WebViewScreen extends StatefulWidget {
   final String title;
   final String url;
@@ -18,7 +21,8 @@ class WebViewScreen extends StatefulWidget {
   const WebViewScreen({
     super.key,
     required this.title,
-    required this.url,
+    // ignore: unused_element_parameter
+    this.url = '',
     required this.assetFallback,
     this.accent = AppColors.cyan,
   });
@@ -30,7 +34,6 @@ class WebViewScreen extends StatefulWidget {
 class _WebViewScreenState extends State<WebViewScreen> {
   late final WebViewController _controller;
   bool _loading = true;
-  bool _usedFallback = false;
 
   @override
   void initState() {
@@ -43,37 +46,22 @@ class _WebViewScreenState extends State<WebViewScreen> {
           onPageFinished: (_) {
             if (mounted) setState(() => _loading = false);
           },
-          onWebResourceError: (err) {
-            // Any failure -> show the offline bundled copy.
-            if (!_usedFallback && err.errorType != null) {
-              _loadFallback();
-            }
-          },
           onNavigationRequest: (req) {
             if (req.url.startsWith('mailto:')) {
               launchUrl(Uri.parse(req.url),
                   mode: LaunchMode.externalApplication);
               return NavigationDecision.prevent;
             }
+            // Block outbound HTTP(S) navigation — the game is fully offline.
+            // The bundled asset must contain all needed content inline.
+            if (req.url.startsWith('http://') ||
+                req.url.startsWith('https://')) {
+              return NavigationDecision.prevent;
+            }
             return NavigationDecision.navigate;
           },
         ),
       );
-    _start();
-  }
-
-  Future<void> _start() async {
-    final conn = await Connectivity().checkConnectivity();
-    final online = !conn.contains(ConnectivityResult.none);
-    if (online) {
-      _controller.loadRequest(Uri.parse(widget.url));
-    } else {
-      _loadFallback();
-    }
-  }
-
-  void _loadFallback() {
-    _usedFallback = true;
     _controller.loadFlutterAsset(widget.assetFallback);
   }
 
@@ -95,8 +83,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     color: widget.accent,
                     onTap: () {
                       setState(() => _loading = true);
-                      _usedFallback = false;
-                      _start();
+                      _controller.loadFlutterAsset(widget.assetFallback);
                     },
                   ),
                 ],
