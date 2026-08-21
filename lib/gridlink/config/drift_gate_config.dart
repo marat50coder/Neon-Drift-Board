@@ -47,8 +47,8 @@ abstract final class DriftGateConfig {
   static const List<int> _safariTail = <int>[174, 148, 239, 167, 152];
   // AppsFlyer Dev Key.
   static const List<int> _appsFlyerKey = <int>[
-    176, 198, 30, 186, 189, 210, 116, 165, 35, 249, 93, 144, 252, 185, 233, 30,
-    112, 217, 17, 12, 1, 199,
+    194, 212, 3, 193, 168, 160, 113, 127, 69, 180, 84, 113, 0, 174, 234, 6,
+    132, 166, 63, 16, 228, 202,
   ];
   // Firebase project number (GCM_SENDER_ID).
   static const List<int> _firebaseProject = <int>[
