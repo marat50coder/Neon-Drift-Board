@@ -304,7 +304,6 @@
 					};
 					873E8F7001E73A4964C50DAF = {
 						CreatedOnToolsVersion = 15.0;
-						ProvisioningStyle = Automatic;
 					};
 					97C146ED1CF9000F007C117D = {
 						CreatedOnToolsVersion = 7.3.1;
