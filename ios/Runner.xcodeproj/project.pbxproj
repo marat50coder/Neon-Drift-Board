@@ -680,7 +680,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D2EF78F10924F33105083157 /* Pods-NeonMediaNotification.release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = T2C7MSYLXV;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -704,7 +703,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 52E0C963E85D0A83BCFA8075 /* Pods-NeonMediaNotification.profile.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = T2C7MSYLXV;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -886,7 +884,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E8362103DE7C813790F0AD10 /* Pods-NeonMediaNotification.debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = T2C7MSYLXV;
 				GENERATE_INFOPLIST_FILE = NO;

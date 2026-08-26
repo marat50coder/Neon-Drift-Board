@@ -36,10 +36,9 @@ target 'Runner' do
   end
 end
 
-# Push notifications are disabled while the app identifier
-# com.neondrift.boardgame is unavailable on the Apple Developer team.
-# Re-enable by uncommenting this block AND running
-# `python3 tool/patch_pbxproj.py && python3 tool/patch_pbxproj_stage2.py`.
+# Notification Service Extension used for Firebase rich-push (images in
+# notifications). Bundle id: com.neondrift.boardgame.NeonMediaNotification —
+# must be registered in App Store Connect for provisioning on Codemagic.
 target 'NeonMediaNotification' do
   use_frameworks!
   platform :ios, '15.0'
