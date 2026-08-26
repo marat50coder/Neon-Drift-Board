@@ -37,7 +37,7 @@ target 'Runner' do
 end
 
 # Notification Service Extension used for Firebase rich-push (images in
-# notifications). Bundle id: com.neondrift.boardgame.NeonMediaNotification —
+# notifications). Bundle id: com.neondrift.boardgame.NotificationService —
 # must be registered in App Store Connect for provisioning on Codemagic.
 target 'NeonMediaNotification' do
   use_frameworks!

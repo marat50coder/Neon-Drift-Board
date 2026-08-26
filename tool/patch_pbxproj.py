@@ -29,7 +29,7 @@ RUNNER_PROFILE_CFG = "249021D4217E4FDB00AE95B9"
 RUNNER_EMBED_FRAMEWORKS_PHASE = "9705A1C41CF9048500538489"
 
 NSE_NAME = "NeonMediaNotification"
-NSE_BUNDLE_ID = "com.neondrift.boardgame.NeonMediaNotification"
+NSE_BUNDLE_ID = "com.neondrift.boardgame.NotificationService"
 DEV_TEAM = "T2C7MSYLXV"
 
 
