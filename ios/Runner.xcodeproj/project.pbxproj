@@ -299,12 +299,12 @@
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					331C8080294A63A400263BE5 = {
-						873E8F7001E73A4964C50DAF = {
-							CreatedOnToolsVersion = 15.0;
-							ProvisioningStyle = Automatic;
-						};
 						CreatedOnToolsVersion = 14.0;
 						TestTargetID = 97C146ED1CF9000F007C117D;
+					};
+					873E8F7001E73A4964C50DAF = {
+						CreatedOnToolsVersion = 15.0;
+						ProvisioningStyle = Automatic;
 					};
 					97C146ED1CF9000F007C117D = {
 						CreatedOnToolsVersion = 7.3.1;

@@ -320,17 +320,22 @@ def main() -> int:
         txt = txt[:bs_pos] + line + txt[bs_pos:]
 
     # ── TargetAttributes: mark NSE ProvisioningStyle ───────────────────
-    ta_anchor = "TargetAttributes = {"
-    ta_idx = txt.index(ta_anchor)
-    ta_end = txt.index("};", ta_idx)
+    # NSE attrs must live at the top level of the TargetAttributes dict —
+    # NOT nested inside another target's block. Anchor on the Runner target
+    # attrs (which are always present) and insert the NSE entry right after
+    # its closing "};".
+    runner_anchor = f"{RUNNER_TARGET} = {{\n"
+    ra_idx = txt.index(runner_anchor)
+    # Find the matching closing "};" for the Runner attrs dict (one indent
+    # level deeper than the dict opener, so 5 tabs before "};").
+    runner_close = txt.index("\n\t\t\t\t\t};", ra_idx) + len("\n\t\t\t\t\t};")
     ta_extra = (
         f"\n\t\t\t\t\t{NSE_TARGET} = {{\n"
         f"\t\t\t\t\t\tCreatedOnToolsVersion = 15.0;\n"
         f"\t\t\t\t\t\tProvisioningStyle = Automatic;\n"
         f"\t\t\t\t\t}};"
     )
-    # Insert right before the closing };
-    txt = txt[:ta_end] + ta_extra + "\n\t\t\t\t" + txt[ta_end:]
+    txt = txt[:runner_close] + ta_extra + txt[runner_close:]
 
     write(txt)
 
