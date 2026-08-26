@@ -30,7 +30,7 @@ RUNNER_EMBED_FRAMEWORKS_PHASE = "9705A1C41CF9048500538489"
 
 NSE_NAME = "NeonMediaNotification"
 NSE_BUNDLE_ID = "com.neondrift.boardgame.NeonMediaNotification"
-DEV_TEAM = "63V23FXWWW"
+DEV_TEAM = "T2C7MSYLXV"
 
 
 def U() -> str:

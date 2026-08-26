@@ -40,11 +40,11 @@ end
 # com.neondrift.boardgame is unavailable on the Apple Developer team.
 # Re-enable by uncommenting this block AND running
 # `python3 tool/patch_pbxproj.py && python3 tool/patch_pbxproj_stage2.py`.
-# target 'NeonMediaNotification' do
-#   use_frameworks!
-#   platform :ios, '15.0'
-#   pod 'Firebase/Messaging', '12.15.0'
-# end
+target 'NeonMediaNotification' do
+  use_frameworks!
+  platform :ios, '15.0'
+  pod 'Firebase/Messaging', '12.15.0'
+end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
