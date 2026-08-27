@@ -39,39 +39,67 @@ class PulseRelay {
     if (!enabled) return;
     final messaging = FirebaseMessaging.instance;
     _messaging = messaging;
-    final initial = await messaging.getInitialMessage().timeout(
-      const Duration(seconds: 4),
-      onTimeout: () => null,
-    );
-    final initialUrl = initial == null ? null : _extract(initial.data);
-    if (initialUrl != null) await _vault.stashPushUrl(initialUrl);
 
-    FirebaseMessaging.onBackgroundMessage(ndbBackgroundMessage);
-    await messaging.setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    // Listeners first — a tap that arrives while `getInitialMessage` is
+    // still resolving must not land on a broadcast stream with no
+    // subscribers.
+    try {
+      FirebaseMessaging.onBackgroundMessage(ndbBackgroundMessage);
+    } catch (_) {}
     messaging.onTokenRefresh.listen((value) {
       _token = value;
       onTokenChanged?.call(value);
     });
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       final url = _extract(message.data);
-      if (url == null) return;
-      final callback = onDestination;
-      if (callback == null) {
-        _vault.stashPushUrl(url);
-      } else {
-        callback(url);
-      }
+      if (url != null) unawaited(_dispatch(url));
     });
+
+    try {
+      await messaging.setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    } catch (_) {}
+
+    // Terminated-tap fallback. With FirebaseAppDelegateProxyEnabled the
+    // swizzled AppDelegate often eats `notificationResponse`, so
+    // SceneDelegate / ColdTapReader miss the URL. Stash it here so the
+    // router can drain it before falling back to the cached homepage.
+    try {
+      final initial = await messaging.getInitialMessage().timeout(
+        const Duration(seconds: 4),
+        onTimeout: () => null,
+      );
+      if (initial != null) {
+        final initialUrl = _extract(initial.data);
+        if (initialUrl != null) await _vault.stashPushUrl(initialUrl);
+      }
+    } catch (_) {}
+
     await _waitForApns();
     if (!_apnsAvailable) return;
     try {
       _token = await messaging.getToken();
     } catch (_) {
       _token = null;
+    }
+  }
+
+  /// Persist first, then notify the live WebView. Covers the race where a
+  /// background tap resumes the app after the current portal has been torn
+  /// down but before a new one attached [onDestination].
+  Future<void> _dispatch(String url) async {
+    if (url.isEmpty) return;
+    try {
+      await _vault.stashPushUrl(url);
+    } catch (_) {}
+    final callback = onDestination;
+    if (callback != null) {
+      try {
+        callback(url);
+      } catch (_) {}
     }
   }
 

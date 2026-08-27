@@ -10,22 +10,21 @@ class SceneDelegate: FlutterSceneDelegate {
     willConnectTo session: UISceneSession,
     options connectionOptions: UIScene.ConnectionOptions
   ) {
+    // Capture the tap BEFORE super.scene() starts Flutter — otherwise Dart
+    // can read SharedPreferences before this write lands.
+    if let response = connectionOptions.notificationResponse,
+       let lane = Self.lane(
+         inside: response.notification.request.content.userInfo
+       ) {
+      let defaults = UserDefaults.standard
+      defaults.set(lane, forKey: Self.launchLaneKey)
+      defaults.synchronize()
+      #if DEBUG
+      NSLog("[NDB.ROUTE] captured notification lane")
+      #endif
+    }
+
     super.scene(scene, willConnectTo: session, options: connectionOptions)
-
-    guard
-      let response = connectionOptions.notificationResponse,
-      let lane = Self.lane(
-        inside: response.notification.request.content.userInfo
-      )
-    else { return }
-
-    let defaults = UserDefaults.standard
-    defaults.set(lane, forKey: Self.launchLaneKey)
-    defaults.synchronize()
-
-    #if DEBUG
-    NSLog("[NDB.ROUTE] captured notification lane")
-    #endif
   }
 
   private static func lane(

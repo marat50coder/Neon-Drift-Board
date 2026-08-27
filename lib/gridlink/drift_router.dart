@@ -60,14 +60,25 @@ class DriftRouter {
     ndbTrace(() => '[NDB.ROUTER] decide start route=${vault.route}');
 
     relay.onTokenChanged = _refreshForToken;
-    // Cold-start push tap is consumed FIRST, before anything else.
-    final coldRoute = await ColdTapReader.consume();
-    if (coldRoute != null) {
+
+    // `getInitialMessage` MUST resolve before we sample the cold-tap URL.
+    // With FirebaseAppDelegateProxyEnabled, Firebase swizzles the AppDelegate
+    // and often eats `notificationResponse`, so SceneDelegate never fires and
+    // ColdTapReader alone returns null on a killed-app tap. PulseRelay.boot
+    // writes that URL into the vault. Skipping this await made the 2nd push
+    // ("привет") open the previous session's cached homepage instead.
+    try {
+      await relay.boot();
+    } catch (_) {}
+
+    final tapUrl = await ColdTapReader.consume();
+    final vaultUrl = await vault.consumePushUrl();
+    final coldUrl = tapUrl ?? vaultUrl;
+    if (coldUrl != null && coldUrl.isNotEmpty) {
       await vault.saveRoute(DriftLane.portal);
-      await vault.consumePushUrl();
       unawaited(_backgroundDispatch());
       onProgress(1);
-      return PortalLane(coldRoute, coldLaunch: true);
+      return PortalLane(coldUrl, coldLaunch: true);
     }
 
     onProgress(0.12);

@@ -85,9 +85,11 @@ class _NeonPortalState extends State<NeonPortal> with WidgetsBindingObserver {
 
     widget.relay.onDestination = (url) {
       final uri = Uri.tryParse(url);
-      if (mounted && uri != null && uri.hasScheme) {
-        _controller.loadRequest(uri);
-      }
+      if (!mounted || uri == null || !uri.hasScheme) return;
+      // Claim the vault copy so a later resume-drain does not reload the
+      // same page (PulseRelay stashes first, then invokes this callback).
+      unawaited(widget.vault.consumePushUrl());
+      _controller.loadRequest(uri);
     };
     _networkSubscription = widget.probe.changes.listen((states) {
       if (states.every((state) => state == ConnectivityResult.none)) {
